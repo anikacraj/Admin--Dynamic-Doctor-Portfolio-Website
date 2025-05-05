@@ -13,15 +13,41 @@ export default function AdminRegister() {
     dob: "",
     password: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here (e.g., API call)
-    console.log("Submitted:", form);
+
+    if (!form.role) {
+      alert("Please select a role.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/admin-x98p9v1k", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (response.ok) {
+        alert("Registration successful. Check your email to verify your account.");
+        setForm({ role: "", name: "", email: "", phoneNumber: "", dob: "", password: "" });
+      } else {
+        const errorMessage = await response.text();
+        alert(`Error: ${errorMessage}`);
+      }
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
+      console.error("Registration error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -47,13 +73,13 @@ export default function AdminRegister() {
             </label>
             <select
               name="role"
+              value={form.role}
               onChange={handleChange}
-              className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               required
+              className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
             >
-              <option value="">Select Role</option>
+              <option value="" disabled>Select a role</option>
               <option value="admin">Admin</option>
-              <option value="moderator">Moderator</option>
             </select>
           </div>
 
@@ -65,11 +91,14 @@ export default function AdminRegister() {
 
           <motion.button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-lg transition"
+            disabled={isSubmitting}
+            className={`w-full py-2 px-4 text-white rounded-lg font-semibold shadow-lg transition ${
+              isSubmitting ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+            }`}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Register
+            {isSubmitting ? "Submitting..." : "Register"}
           </motion.button>
         </form>
 

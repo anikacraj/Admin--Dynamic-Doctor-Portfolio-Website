@@ -16,6 +16,8 @@ export interface IAdmin extends Document {
   name: string;
   email: string;
   password: string;
+  dob:string;
+  phoneNumber:string;
   thumbnail :string;
   about?:About[];
   isVerified: boolean;
@@ -39,6 +41,15 @@ const AdminSchema: Schema<IAdmin> = new mongoose.Schema({
     type: String,
     required: true,
   },
+  dob: {
+    type: String,
+    required: true,
+  },
+  phoneNumber: {
+    type: String,
+    required: true,
+  },
+
   isVerified: {
     type: Boolean,
     default: false,
@@ -57,10 +68,17 @@ type:String ,
 });
 
 AdminSchema.methods.getVerificationToken = function (): string {
-  const verificationToken = crypto.randomBytes(20).toString("hex");
-  this.verifyToken = crypto.createHash("sha256").update(verificationToken).digest("hex");
-  this.verifyTokenExpire = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
-  return verificationToken;
+  // Generate a random token
+  const rawToken = crypto.randomBytes(32).toString("hex");
+
+  // Hash the token before saving to the DB for security
+  this.verifyToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+
+  // Set token expiration time (30 minutes)
+  this.verifyTokenExpire = new Date(Date.now() + 30 * 60 * 1000);
+
+  // Return raw token to be emailed to the user
+  return rawToken;
 };
 
 export default mongoose.models.Admin || mongoose.model<IAdmin>("Admin", AdminSchema);
