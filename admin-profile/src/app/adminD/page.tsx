@@ -4,12 +4,15 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import clsx from 'clsx';
+import BlockList from '@/src/components/BlockList';// 👈 import the component
+import VerifiedDoctor from '@/src/components/VerifiedDoctor';
+import AdminThumbnail from '@/src/components/AdminThumbnail';
 
 const menuItems = [
   'Verified Doctor',
   'Verify Doctor',
   'Block List',
-  'Tamil Design',
+  'Thumbnail Upload',
   'Sign Out',
 ];
 
@@ -79,9 +82,8 @@ export default function AdminDashboard() {
         )}
       </AnimatePresence>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Mobile Top Bar */}
         <div className="md:hidden flex justify-between items-center bg-blue-600 text-white p-4 shadow">
           <h2 className="text-xl font-bold">DR PORT.</h2>
           <button onClick={toggleSidebar}>
@@ -89,29 +91,47 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        {/* Page Content */}
         <main className="flex-1 p-6 overflow-y-auto">
-          <motion.div
-            key={activeMenu}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"
-          >
-            <h1 className="text-2xl font-bold mb-2">{activeMenu}</h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              You clicked on <strong>{activeMenu}</strong>. This section adjusts beautifully on all devices.
-            </p>
+        <motion.div
+  key={activeMenu}
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.4 }}
+  className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"
+>
+  <h1 className="text-2xl font-bold mb-2">{activeMenu}</h1>
 
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="h-40 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center text-white font-semibold text-lg shadow-lg"
-            >
-              {activeMenu} Content
-            </motion.div>
+  {(() => {
+    if (activeMenu === 'Block List') {
+      return <BlockList />;
+    } else if (activeMenu === 'Verified Doctor') {
+      return <VerifiedDoctor />;
+    }
+    else if(activeMenu === 'Thumbnail Upload') {
+  return <AdminThumbnail adminId={''} />
+    }
+    
+    
+    else {
+      return (
+        <>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            You clicked on <strong>{activeMenu}</strong>. This section adjusts beautifully on all devices.
+          </p>
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="h-40 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center text-white font-semibold text-lg shadow-lg"
+          >
+            {activeMenu} Content
           </motion.div>
+        </>
+      );
+    }
+  })()}
+</motion.div>
+
         </main>
       </div>
     </div>

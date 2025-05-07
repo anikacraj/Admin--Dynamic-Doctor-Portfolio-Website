@@ -18,7 +18,7 @@ export interface IAdmin extends Document {
   password: string;
   dob:string;
   phoneNumber:string;
-  thumbnail :string;
+  thumbnail?: string[];
   about?:About[];
   isVerified: boolean;
   verifyToken: string;
@@ -60,9 +60,13 @@ const AdminSchema: Schema<IAdmin> = new mongoose.Schema({
   verifyTokenExpire: {
     type: Date,
   },
-  thumbnail :{
-type:String ,
+  thumbnail: {
+    type: [String],
+    default: [],
   },
+
+
+  
   about:{type:[{heading:String,description:String,MissingSlotContext:String,vision:String,team:String}],default:[]},
   
 });
