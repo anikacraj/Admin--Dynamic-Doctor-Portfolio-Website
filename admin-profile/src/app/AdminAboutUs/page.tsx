@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import AdminAboutUs from '../AdminInputAboutUs/page';
+import { redirect } from 'next/navigation';
 
 export default function AboutAdminPage() {
   return (

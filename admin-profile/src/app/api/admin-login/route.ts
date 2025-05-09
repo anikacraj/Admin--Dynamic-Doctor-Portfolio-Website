@@ -1,24 +1,54 @@
-import { dbConnect } from "@/src/config/dbConnect";
-import adminModel from "@/src/models/admin.model";
-import bcrypt from "bcryptjs";
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export async function POST(req: Request) {
-  await dbConnect();
-  const { email, password, phoneNumber, dob } = await req.json();
+export async function POST(request: NextRequest) {
+  try {
+    const { email, password, phoneNumber, dob } = await request.json();
+    
+    // Validation checks
+    if (!email || !password || !phoneNumber || !dob) {
+      return NextResponse.json(
+        { message: "All fields are required" },
+        { status: 400 }
+      );
+    }
 
-  const admin = await adminModel.findOne({ email });
+    // Replace with your actual authentication logic
+    const isValid = (
+      email === "admin@example.com" && 
+      password === "admin123" &&
+      phoneNumber === "+1234567890" &&
+      dob === "1990-01-01"
+    );
+    
+    if (!isValid) {
+      return NextResponse.json(
+        { message: "Invalid credentials. Please check your inputs." },
+        { status: 401 }
+      );
+    }
 
-  if (!admin) return new Response("Admin not found", { status: 404 });
+    // In real app, generate proper JWT token
+    const token = "sample-auth-token";
+    
+    const response = NextResponse.json(
+      { message: "Login successful", token },
+      { status: 200 }
+    );
 
-  if (!admin.isVerified) {
-    return new Response("Please verify your email before logging in.", { status: 401 });
+    response.cookies.set("auth-token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Login error:", error);
+    return NextResponse.json(
+      { message: "Internal server error. Please try again later." },
+      { status: 500 }
+    );
   }
-
-  const isMatch = await bcrypt.compare(password, admin.password);
-  if (!isMatch || admin.phoneNumber !== phoneNumber || admin.dob !== dob) {
-    return new Response("Invalid credentials", { status: 401 });
-  }
-
-  // Here you would create a session/token
-  return new Response("Login successful", { status: 200 });
 }

@@ -66,7 +66,7 @@ export interface IUser extends Document {
   getVerificationToken(): string;
   otp: string;
   otpExpire:Date;
-
+  adminVerified?:boolean;
 
   // Profile
   optionalEmail?: string;
@@ -149,6 +149,10 @@ const UserSchema: Schema<IUser> = new Schema(
     blockedUntil: {
       type: Date,
       default: null,
+    },
+     adminVerified:{
+      type: Boolean,
+      default: false,
     },
     // Social
     linkedin: { type: String, trim: true },

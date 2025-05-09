@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { redirect } from 'next/navigation';
 
 
 export default function Page() {
@@ -46,9 +47,7 @@ export default function Page() {
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
             Here you can manage doctor profiles, view analytics, and control platform features efficiently.
           </p>
-          <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition shadow-md">
-            Manage Now
-          </button>
+       <Link href="/admin-ayw-login?redirect=/adminHome" className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition shadow-md">Manage Now </Link>
         </motion.div>
 
         <motion.div 

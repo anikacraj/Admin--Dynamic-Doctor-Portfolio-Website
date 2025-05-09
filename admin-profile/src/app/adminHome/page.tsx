@@ -5,9 +5,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { redirect } from 'next/navigation';
+import { ShieldCheck } from "lucide-react";
 
 type User = {
   blocked: any;
+  adminVerified:any;
   _id: string;
   name: string;
   email: string;
@@ -45,6 +48,26 @@ export default function AdminHomePage() {
       if (data.success) {
         // Refresh the users list or state
         alert(blocked ? "User blocked" : "User unblocked");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    }
+  };
+
+
+   const handleadminVerified = async (userId: string, adminVerified: boolean) => {
+    try {
+      const res = await fetch("/api/admin/adminVerified-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, adminVerified }),
+      });
+  
+      const data = await res.json();
+      if (data.success) {
+        // Refresh the users list or state
+        alert(adminVerified ? "Dr Verified" : "No you are not");
       }
     } catch (err) {
       console.error(err);
@@ -143,9 +166,20 @@ export default function AdminHomePage() {
                      alt={user.name}
                      className="w-16 h-16 rounded-full border object-cover"
                    />
-                   <div>
+                   <div onClick={() => router.push(`/${user._id}`)}>
                      <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
                        {user.name}
+
+                        {user.adminVerified && (
+          
+          <span className="relative ml-3   group inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-tr from-blue-500 via-sky-400 to-blue-600 shadow-md cursor-pointer">
+            <ShieldCheck  className="w-[35px] h-[24px]  text-white" />
+            
+            <span className="absolute bottom-full mb-1 hidden group-hover:flex text-xs text-white bg-gray-900 px-2 py-1 rounded shadow-lg whitespace-nowrap">
+              Verified Medical Professional
+            </span>
+          </span>
+        )}
                      </h2>
                      <p className="text-sm text-blue-600 dark:text-blue-400">
                        {user.specialization || "General Practitioner"}
@@ -171,6 +205,22 @@ export default function AdminHomePage() {
     onClick={() => handleBlockUser(user._id, true, 7)} // block for 7 days
   >
     Block
+  </button>
+)}
+
+ {user.adminVerified ? (
+  <button
+    className="px-3 py-1 m-3 bg-green-500 text-white rounded"
+    onClick={() => handleadminVerified(user._id, false)}
+  >
+    Unverified
+  </button>
+) : (
+  <button
+    className="px-3 py-1 m-3 bg-red-500 text-white rounded"
+    onClick={() => handleadminVerified(user._id, true)} // block for 7 days
+  >
+    Verified
   </button>
 )}
 

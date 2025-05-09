@@ -7,10 +7,12 @@ import clsx from 'clsx';
 import BlockList from '@/src/components/BlockList';// 👈 import the component
 import VerifiedDoctor from '@/src/components/VerifiedDoctor';
 import AdminThumbnail from '@/src/components/AdminThumbnail';
+import { redirect } from 'next/navigation';
+import UnVerifiedDoctor from '@/src/components/UnverifiedDoctor';
 
 const menuItems = [
   'Verified Doctor',
-  'Verify Doctor',
+  'Unverified Doctor',
   'Block List',
   'Thumbnail Upload',
   'Sign Out',
@@ -106,6 +108,9 @@ export default function AdminDashboard() {
       return <BlockList />;
     } else if (activeMenu === 'Verified Doctor') {
       return <VerifiedDoctor />;
+    }
+    else if (activeMenu === 'Unverified Doctor'){
+      return <UnVerifiedDoctor />
     }
     else if(activeMenu === 'Thumbnail Upload') {
   return <AdminThumbnail adminId={''} />
