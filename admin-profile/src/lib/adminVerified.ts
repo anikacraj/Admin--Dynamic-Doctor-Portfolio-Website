@@ -9,7 +9,7 @@ export default async function adminVerified(email: string, token: string) {
     },
   });
 
-  const url = `http://localhost:3000/api/admin-x98p9v1k?token=${token}`;
+  const url = `http://localhost:3004/api/admin-x98p9v1k?token=${token}`;
 
   await transport.sendMail({
     from: '"Admin Panel" <no-reply@example.com>',
