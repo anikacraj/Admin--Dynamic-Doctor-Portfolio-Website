@@ -2,10 +2,18 @@
 
 import { motion } from 'framer-motion';
 import React from 'react';
+import AdminHeader from './AdminHeader';
 
 const AdminWelcome: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white flex items-center justify-center p-6">
+    <div className='text-white'>
+      <div>
+<AdminHeader />
+      </div>
+
+       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white flex items-center justify-center p-6">
+
+
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -30,7 +38,9 @@ const AdminWelcome: React.FC = () => {
         </motion.p>
       </motion.div>
     </div>
-  );
+
+    </div>
+     );
 };
 
 export default AdminWelcome;
